@@ -34,7 +34,7 @@ public class MainActivity extends ActivityTemplate {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Toast.makeText(this, "activity created", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "main activity created", Toast.LENGTH_SHORT).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
@@ -77,7 +77,6 @@ public class MainActivity extends ActivityTemplate {
         switch (item.getItemId()) {
             case R.id.action_settings:
 //                recreate();
-                Toast.makeText(this, "settings pressed", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, Settings.class);
                 this.startActivity(intent);
                 return true;
