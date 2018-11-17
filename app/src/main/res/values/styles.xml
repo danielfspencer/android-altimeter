@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="DarkAppTheme" parent="Base.V14.Theme.MaterialComponents">
+        <!--<item name="colorPrimary"</item>-->
+        <!--<item name="colorPrimaryDark"></item>-->
+        <!--<item name="colorAccent"></item>-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="LightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--Override the colors to make light theme-->
+        <!--<item name="colorPrimary"></item>-->
+        <!--<item name="colorPrimaryDark"></item>-->
+        <!--<item name="colorAccent"</item>-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>
