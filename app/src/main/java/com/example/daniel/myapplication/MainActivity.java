@@ -131,8 +131,6 @@ public class MainActivity extends ActivityTemplate {
         } else {
             pressure_history_max_length = 1;
         }
-
-        Toast.makeText(this, "prefs read", Toast.LENGTH_SHORT).show();
     }
 
     private float getAltitude(float pressure) {
