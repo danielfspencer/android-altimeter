@@ -47,8 +47,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
@@ -87,13 +85,13 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Averaging Length"
-                    app:layout_constraintBottom_toBottomOf="@+id/average_frames"
+                    app:layout_constraintBottom_toBottomOf="@+id/average_samples"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/average_frames" />
+                    app:layout_constraintTop_toTopOf="@+id/average_samples" />
 
                 <EditText
-                    android:id="@+id/average_frames"
-                    android:layout_width="30dp"
+                    android:id="@+id/average_samples"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
@@ -112,10 +110,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:text="frames"
-                    app:layout_constraintBottom_toBottomOf="@+id/average_frames"
-                    app:layout_constraintStart_toEndOf="@+id/average_frames"
-                    app:layout_constraintTop_toTopOf="@+id/average_frames" />
+                    android:text="samples"
+                    app:layout_constraintBottom_toBottomOf="@+id/average_samples"
+                    app:layout_constraintStart_toEndOf="@+id/average_samples"
+                    app:layout_constraintTop_toTopOf="@+id/average_samples" />
 
                 <Switch
                     android:id="@+id/filter_enabled"
@@ -184,7 +182,7 @@
 
                 <EditText
                     android:id="@+id/sample_every_frames"
-                    android:layout_width="30dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
@@ -249,7 +247,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
                 <RadioGroup
-                    android:id="@+id/radioGroup"
+                    android:id="@+id/theme_selector"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -280,9 +278,9 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:text="Theme"
-                    app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
+                    app:layout_constraintBottom_toBottomOf="@+id/theme_selector"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/radioGroup" />
+                    app:layout_constraintTop_toTopOf="@+id/theme_selector" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -311,7 +309,7 @@
 
                 <EditText
                     android:id="@+id/render_every_frames"
-                    android:layout_width="30dp"
+                    android:layout_width="40dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
@@ -322,9 +320,21 @@
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView3"
-                    app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                    app:layout_constraintTop_toBottomOf="@+id/theme_selector" />
 
             </android.support.constraint.ConstraintLayout>
+
+            <Button
+                android:id="@+id/set_defaults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="set defaults"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

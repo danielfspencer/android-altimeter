@@ -1,5 +1,7 @@
 package com.example.daniel.myapplication;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +19,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActivityTemplate {
     int frame_number = 0;
-    int sample_every_n_frames = 4;
-    int sample_average_seconds = 1;
+    int sample_every_n_frames;
+    int render_every_n_frames;
 
     private TextView pressure_txt;
     private TextView height_txt;
@@ -30,24 +32,26 @@ public class MainActivity extends ActivityTemplate {
 
     private float reference_pressure;
     private ArrayList<Float> pressure_history;
-    private int pressure_history_max_length = (60 / sample_every_n_frames) * sample_average_seconds;
+    private int pressure_history_max_length;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Toast.makeText(this, "main activity created", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "main activity created", Toast.LENGTH_SHORT).show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
 
+        // bind references
         mainView = findViewById(android.R.id.content);
-
         pressure_txt = findViewById(R.id.pressure);
         height_txt = findViewById(R.id.height);
         Button zero_button = findViewById(R.id.zero);
 
+        // init sensor
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
 
+        // set button onClick handler
         zero_button.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +59,7 @@ public class MainActivity extends ActivityTemplate {
             }
         });
 
+        // call drawFrame every screen refresh
         mainView.postOnAnimation(new Runnable() {
             @Override
             public void run() {
@@ -70,13 +75,14 @@ public class MainActivity extends ActivityTemplate {
             pressure_history = (ArrayList<Float>) savedInstanceState.getSerializable("pressure_history");
             reference_pressure = savedInstanceState.getFloat("reference_pressure");
         }
+
+        readPreferences();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-//                recreate();
                 Intent intent = new Intent(this, Settings.class);
                 this.startActivity(intent);
                 return true;
@@ -96,6 +102,7 @@ public class MainActivity extends ActivityTemplate {
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(sensorEventListener, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        readPreferences();
     }
 
     @Override
@@ -109,6 +116,19 @@ public class MainActivity extends ActivityTemplate {
         super.onSaveInstanceState(outState);
         outState.putFloat("reference_pressure",reference_pressure);
         outState.putSerializable("pressure_history",pressure_history);
+    }
+
+    private void readPreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        sample_every_n_frames = preferences.getInt("sample_every_n_frames",4);
+        render_every_n_frames = preferences.getInt("render_every_n_frames",4);
+
+        if (preferences.getBoolean("filter_enabled",true)) {
+            pressure_history_max_length = preferences.getInt("average_samples", 20);
+        } else {
+            pressure_history_max_length = 1;
+        }
     }
 
     private float getAltitude(float pressure) {
