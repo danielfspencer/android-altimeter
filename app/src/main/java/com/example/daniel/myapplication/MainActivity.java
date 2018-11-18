@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.os.Bundle;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
@@ -18,12 +19,13 @@ import android.content.Intent;
 import java.util.ArrayList;
 
 public class MainActivity extends ActivityTemplate {
-    int frame_number = 0;
-    int sample_every_n_frames;
-    int render_every_n_frames;
+    private int frame_number = 0;
+    private int sample_every_n_frames;
+    private int render_every_n_frames;
 
     private TextView pressure_txt;
     private TextView height_txt;
+    private ProgressBar buffer;
     private View mainView;
 
     private SensorManager sensorManager;
@@ -45,6 +47,7 @@ public class MainActivity extends ActivityTemplate {
         mainView = findViewById(android.R.id.content);
         pressure_txt = findViewById(R.id.pressure);
         height_txt = findViewById(R.id.height);
+        buffer = findViewById(R.id.buffer);
         Button zero_button = findViewById(R.id.zero);
 
         // init sensor
@@ -72,11 +75,10 @@ public class MainActivity extends ActivityTemplate {
             pressure_history = new ArrayList<Float>();
             reference_pressure = -1;
         } else {
-            pressure_history = (ArrayList<Float>) savedInstanceState.getSerializable("pressure_history");
+//            pressure_history = (ArrayList<Float>) savedInstanceState.getSerializable("pressure_history");
+            pressure_history = new ArrayList<Float>();
             reference_pressure = savedInstanceState.getFloat("reference_pressure");
         }
-
-        readPreferences();
     }
 
     @Override
@@ -101,7 +103,7 @@ public class MainActivity extends ActivityTemplate {
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(sensorEventListener, pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, pressureSensor, SensorManager.SENSOR_DELAY_FASTEST);
         readPreferences();
     }
 
@@ -122,13 +124,15 @@ public class MainActivity extends ActivityTemplate {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         sample_every_n_frames = preferences.getInt("sample_every_n_frames",4);
-        render_every_n_frames = preferences.getInt("render_every_n_frames",4);
+        render_every_n_frames = preferences.getInt("render_every_n_frames",6);
 
         if (preferences.getBoolean("filter_enabled",true)) {
             pressure_history_max_length = preferences.getInt("average_samples", 20);
         } else {
             pressure_history_max_length = 1;
         }
+
+        Toast.makeText(this, "prefs read", Toast.LENGTH_SHORT).show();
     }
 
     private float getAltitude(float pressure) {
@@ -138,7 +142,11 @@ public class MainActivity extends ActivityTemplate {
     private void drawFrame() {
         if (frame_number % sample_every_n_frames == 0) {
             addReading();
+        }
+
+        if (frame_number % render_every_n_frames == 0) {
             drawInfo();
+//            height_txt.setText(String.format("%d", sensorEventListener.getChanges()));
         }
 
         frame_number++;
@@ -151,6 +159,9 @@ public class MainActivity extends ActivityTemplate {
             //sensor not ready
             return;
         }
+
+        buffer.setMax(pressure_history_max_length);
+        buffer.setProgress(pressure_history.size());
 
         if (pressure_history.size() < pressure_history_max_length) {
             pressure_history.add(pressure);

@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:text="samples"
+                    android:text="sample(s)"
                     app:layout_constraintBottom_toBottomOf="@+id/average_samples"
                     app:layout_constraintStart_toEndOf="@+id/average_samples"
                     app:layout_constraintTop_toTopOf="@+id/average_samples" />
@@ -201,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:text="frames"
+                    android:text="frame(s)"
                     app:layout_constraintBottom_toBottomOf="@+id/sample_every_frames"
                     app:layout_constraintStart_toEndOf="@+id/sample_every_frames"
                     app:layout_constraintTop_toTopOf="@+id/sample_every_frames" />
@@ -302,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
-                    android:text="frames"
+                    android:text="frame(s)"
                     app:layout_constraintBottom_toBottomOf="@+id/render_every_frames"
                     app:layout_constraintStart_toEndOf="@+id/render_every_frames"
                     app:layout_constraintTop_toTopOf="@+id/render_every_frames" />
@@ -314,13 +314,48 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView3"
+                    app:layout_constraintTop_toBottomOf="@+id/theme_selector" />
+
+                <EditText
+                    android:id="@+id/decimal_places"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:ems="10"
                     android:inputType="number"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView3"
-                    app:layout_constraintTop_toBottomOf="@+id/theme_selector" />
+                    app:layout_constraintStart_toEndOf="@+id/textView11"
+                    app:layout_constraintTop_toBottomOf="@+id/render_every_frames" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="Display"
+                    app:layout_constraintBottom_toBottomOf="@+id/decimal_places"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/decimal_places" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="decimal places"
+                    app:layout_constraintBottom_toBottomOf="@+id/decimal_places"
+                    app:layout_constraintStart_toEndOf="@+id/decimal_places"
+                    app:layout_constraintTop_toTopOf="@+id/decimal_places" />
 
             </android.support.constraint.ConstraintLayout>
 

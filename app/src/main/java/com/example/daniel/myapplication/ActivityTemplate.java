@@ -6,13 +6,26 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class ActivityTemplate extends AppCompatActivity {
+    private int current_theme;
+    private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int theme = preferences.getInt("theme",R.style.DarkAppTheme);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        setTheme(theme);
+        current_theme = preferences.getInt("theme",R.style.DarkAppTheme);
+
+        setTheme(current_theme);
 
         super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (current_theme != preferences.getInt("theme",R.style.DarkAppTheme)) {
+            recreate();
+        }
     }
 }

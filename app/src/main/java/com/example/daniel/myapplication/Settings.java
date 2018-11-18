@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 public class Settings extends ActivityTemplate {
     private RadioGroup ref_theme_selected;
     private TextView ref_render_every_n_frames;
+    private TextView ref_decimal_places;
     private TextView ref_sample_every_n_frames;
     private TextView ref_average_samples;
     private Switch ref_filter_enabled;
@@ -29,12 +30,16 @@ public class Settings extends ActivityTemplate {
         setContentView(R.layout.activity_settings);
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = preferences.edit();
 
         // bind references to elements
         ref_theme_selected = findViewById(R.id.theme_selector);
         ref_render_every_n_frames = findViewById(R.id.render_every_frames);
+        ref_decimal_places = findViewById(R.id.decimal_places);
         ref_sample_every_n_frames = findViewById(R.id.sample_every_frames);
         ref_average_samples = findViewById(R.id.average_samples);
         ref_filter_enabled = findViewById(R.id.filter_enabled);
@@ -47,7 +52,8 @@ public class Settings extends ActivityTemplate {
             ref_theme_selected.check(R.id.light_theme);
         }
         ref_render_every_n_frames.setText( Integer.toString(preferences.getInt("render_every_n_frames",4)) );
-        ref_sample_every_n_frames.setText( Integer.toString(preferences.getInt("sample_every_n_frames",4)) );
+        ref_decimal_places.setText( Integer.toString(preferences.getInt("decimal_places",2)) );
+        ref_sample_every_n_frames.setText( Integer.toString(preferences.getInt("sample_every_n_frames",6)) );
         ref_average_samples.setText( Integer.toString(preferences.getInt("average_samples",20)) );
         ref_filter_enabled.setChecked( preferences.getBoolean("filter_enabled",true));
 
@@ -78,6 +84,27 @@ public class Settings extends ActivityTemplate {
                     int number = Integer.parseInt(s.toString());
                     if (number > 0) {
                         editor.putInt("render_every_n_frames",number);
+                        editor.apply();
+                    }
+                } catch (java.lang.NumberFormatException e) {
+                    // ignore because it is not valid
+                    return;
+                }
+            }
+        });
+        ref_decimal_places.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    int number = Integer.parseInt(s.toString());
+                    if (number >= 0) {
+                        editor.putInt("decimal_places",number);
                         editor.apply();
                     }
                 } catch (java.lang.NumberFormatException e) {
@@ -141,12 +168,19 @@ public class Settings extends ActivityTemplate {
             public void onClick(View v) {
                 editor.clear();
                 editor.putInt("render_every_n_frames",4);
-                editor.putInt("sample_every_n_frames",4);
+                editor.putInt("decimal_places",2);
+                editor.putInt("sample_every_n_frames",6);
                 editor.putInt("average_samples",20);
                 editor.putBoolean("filter_enabled",true);
                 editor.commit();
                 recreate();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
