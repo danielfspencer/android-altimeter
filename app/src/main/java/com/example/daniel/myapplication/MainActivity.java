@@ -1,6 +1,7 @@
 package com.example.daniel.myapplication;
 
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.widget.Toast;
 import android.content.Intent;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class MainActivity extends ActivityTemplate {
@@ -187,5 +190,26 @@ public class MainActivity extends ActivityTemplate {
         if (reference_pressure != -1) {
             height_txt.setText(String.format("%.2f", getAltitude(pressure)));
         }
+    }
+
+    private void writeToFile() {
+        String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+        String fileName = "AnalysisData.csv";
+        String filePath = baseDir + File.separator + fileName;
+        File f = new File(filePath );
+        CSVWriter writer;
+// File exist
+        if(f.exists() && !f.isDirectory()){
+            mFileWriter = new FileWriter(filePath , true);
+            writer = new CSVWriter(mFileWriter);
+        }
+        else {
+            writer = new CSVWriter(new FileWriter(filePath));
+        }
+        String[] data = {"Ship Name","Scientist Name", "...",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").formatter.format(date)});
+
+        writer.writeNext(data);
+
+        writer.close();
     }
 }
