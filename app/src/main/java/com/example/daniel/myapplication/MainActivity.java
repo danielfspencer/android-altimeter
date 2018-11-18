@@ -1,7 +1,6 @@
 package com.example.daniel.myapplication;
 
 import android.content.SharedPreferences;
-import android.icu.text.SimpleDateFormat;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,9 +16,9 @@ import android.view.View;
 import android.widget.Toast;
 import android.content.Intent;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import com.opencsv.CSVWriter;
 
 public class MainActivity extends ActivityTemplate {
     private int frame_number = 0;
@@ -38,6 +37,8 @@ public class MainActivity extends ActivityTemplate {
     private float reference_pressure;
     private ArrayList<Float> pressure_history;
     private int pressure_history_max_length;
+
+//    private ArrayList<Float> pressures = new ArrayList<Float>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class MainActivity extends ActivityTemplate {
             @Override
             public void onClick(View v) {
                reference_pressure = getAveragedReading();
+//                writeToFile(pressures);
             }
         });
 
@@ -78,7 +80,6 @@ public class MainActivity extends ActivityTemplate {
             pressure_history = new ArrayList<Float>();
             reference_pressure = -1;
         } else {
-//            pressure_history = (ArrayList<Float>) savedInstanceState.getSerializable("pressure_history");
             pressure_history = new ArrayList<Float>();
             reference_pressure = savedInstanceState.getFloat("reference_pressure");
         }
@@ -99,7 +100,7 @@ public class MainActivity extends ActivityTemplate {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.overflow_menu, menu);
+        inflater.inflate(R.menu.main, menu);
         return true;
     }
 
@@ -147,7 +148,6 @@ public class MainActivity extends ActivityTemplate {
 
         if (frame_number % render_every_n_frames == 0) {
             drawInfo();
-//            height_txt.setText(String.format("%d", sensorEventListener.getChanges()));
         }
 
         frame_number++;
@@ -163,6 +163,9 @@ public class MainActivity extends ActivityTemplate {
 
         buffer.setMax(pressure_history_max_length);
         buffer.setProgress(pressure_history.size());
+
+//        pressures.add(pressure);
+//        height_txt.setText(String.format("%d", pressures.size()));
 
         if (pressure_history.size() < pressure_history_max_length) {
             pressure_history.add(pressure);
@@ -192,24 +195,29 @@ public class MainActivity extends ActivityTemplate {
         }
     }
 
-    private void writeToFile() {
-        String baseDir = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-        String fileName = "AnalysisData.csv";
-        String filePath = baseDir + File.separator + fileName;
-        File f = new File(filePath );
-        CSVWriter writer;
-// File exist
-        if(f.exists() && !f.isDirectory()){
-            mFileWriter = new FileWriter(filePath , true);
-            writer = new CSVWriter(mFileWriter);
-        }
-        else {
-            writer = new CSVWriter(new FileWriter(filePath));
-        }
-        String[] data = {"Ship Name","Scientist Name", "...",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").formatter.format(date)});
+    private void writeToFile(ArrayList<Float> values) {
+        try {
+            String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+            CSVWriter writer = new CSVWriter(new FileWriter(filePath+"/raw.csv"));
 
-        writer.writeNext(data);
+            Toast.makeText(this, filePath, Toast.LENGTH_SHORT).show();
 
-        writer.close();
+
+            String[] header = {"reading #", "pressure hPa"};
+            writer.writeNext(header);
+
+            String[] line = new String[2];
+
+            for (int i = 0; i < values.size(); i++) {
+                line[0] = Integer.toString(i);
+                line[1] = String.format("%.4f", values.get(i));
+                writer.writeNext(line);
+            }
+
+            writer.close();
+            Toast.makeText(this, "saved ok", Toast.LENGTH_SHORT).show();
+        } catch (java.io.IOException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
