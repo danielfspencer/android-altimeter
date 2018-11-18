@@ -6,9 +6,12 @@
         android:title="@string/settings_button_desc"
         />
     <item
-        android:id="@+id/app_bar_switch"
+        android:id="@+id/log_switch"
         android:checkable="true"
         android:title="Log data"
         app:actionLayout="@layout/switch_item" />
+    <item
+        android:id="@+id/save_csv"
+        android:title="Save CSV" />
 
 </menu>

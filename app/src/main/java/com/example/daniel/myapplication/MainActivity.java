@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Button;
 import android.view.View;
@@ -29,6 +30,7 @@ public class MainActivity extends ActivityTemplate {
     private TextView height_txt;
     private ProgressBar buffer;
     private View mainView;
+    private Switch log_switch;
 
     private SensorManager sensorManager;
     private Sensor pressureSensor;
@@ -38,7 +40,8 @@ public class MainActivity extends ActivityTemplate {
     private ArrayList<Float> pressure_history;
     private int pressure_history_max_length;
 
-//    private ArrayList<Float> pressures = new ArrayList<Float>();
+    private ArrayList<Float> pressures = new ArrayList<Float>();
+    private boolean log_pressures = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class MainActivity extends ActivityTemplate {
         height_txt = findViewById(R.id.height);
         buffer = findViewById(R.id.buffer);
         Button zero_button = findViewById(R.id.zero);
+        log_switch = findViewById(R.id.log_switch);
 
         // init sensor
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -63,7 +67,6 @@ public class MainActivity extends ActivityTemplate {
             @Override
             public void onClick(View v) {
                reference_pressure = getAveragedReading();
-//                writeToFile(pressures);
             }
         });
 
@@ -91,6 +94,13 @@ public class MainActivity extends ActivityTemplate {
             case R.id.action_settings:
                 Intent intent = new Intent(this, Settings.class);
                 this.startActivity(intent);
+                return true;
+            case R.id.log_switch:
+                log_pressures = !item.isChecked();
+                item.setChecked(log_pressures);
+                return true;
+            case R.id.save_csv:
+                writeToFile(pressures);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -164,8 +174,9 @@ public class MainActivity extends ActivityTemplate {
         buffer.setMax(pressure_history_max_length);
         buffer.setProgress(pressure_history.size());
 
-//        pressures.add(pressure);
-//        height_txt.setText(String.format("%d", pressures.size()));
+        if (log_pressures) {
+            pressures.add(pressure);
+        }
 
         if (pressure_history.size() < pressure_history_max_length) {
             pressure_history.add(pressure);
@@ -200,9 +211,6 @@ public class MainActivity extends ActivityTemplate {
             String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
             CSVWriter writer = new CSVWriter(new FileWriter(filePath+"/raw.csv"));
 
-            Toast.makeText(this, filePath, Toast.LENGTH_SHORT).show();
-
-
             String[] header = {"reading #", "pressure hPa"};
             writer.writeNext(header);
 
@@ -215,7 +223,7 @@ public class MainActivity extends ActivityTemplate {
             }
 
             writer.close();
-            Toast.makeText(this, "saved ok", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format("%d readings saved", values.size()), Toast.LENGTH_SHORT).show();
         } catch (java.io.IOException e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
