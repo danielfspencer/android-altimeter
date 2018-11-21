@@ -95,6 +95,10 @@ public class MainActivity extends ActivityTemplate {
                 Intent intent = new Intent(this, Settings.class);
                 this.startActivity(intent);
                 return true;
+            case R.id.open_debug:
+                Intent another_intent = new Intent(this, Debug.class);
+                this.startActivity(another_intent);
+                return true;
             case R.id.log_switch:
                 log_pressures = !item.isChecked();
                 item.setChecked(log_pressures);

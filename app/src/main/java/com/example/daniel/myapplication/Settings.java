@@ -177,10 +177,4 @@ public class Settings extends ActivityTemplate {
             }
         });
     }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 }

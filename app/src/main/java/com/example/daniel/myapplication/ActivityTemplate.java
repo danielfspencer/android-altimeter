@@ -28,4 +28,10 @@ public class ActivityTemplate extends AppCompatActivity {
             recreate();
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

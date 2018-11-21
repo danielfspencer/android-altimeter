@@ -6,6 +6,9 @@
         android:title="@string/settings_button_desc"
         />
     <item
+        android:id="@+id/open_debug"
+        android:title="Debug Info" />
+    <item
         android:id="@+id/log_switch"
         android:checkable="true"
         android:title="Log data"
